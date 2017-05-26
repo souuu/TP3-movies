@@ -1,0 +1,221 @@
+<div class="wrapper">
+  <div class="header header-filter" style="background-image: url('../../assets/img/bg2.jpeg');">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+          <div class="brand">
+            <h1> SW Movies.</h1>
+            <h3>Votre film est chez nous</h3>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="main main-raised">
+    <div class="section section-basic">
+      <div class="container">
+        <div class="title">
+          <h2>Les derniers films</h2>
+        </div>
+        <div class="row">
+          <div class="col-sm-3 text-center" *ngFor="let film of films2">
+            <img [src]="film.image" alt="Raised Image" class="img-rounded img-raised" style="cursor: pointer;width: 260px;height: 350px;" (click)="clickFilm(film._id)">
+            <h4 (click)="clickFilm(film._id)" style="cursor:pointer;">{{film.title}}</h4>
+            <h4 (click)="clickFilm(film._id)" style="cursor: pointer;">{{film.year}}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section section-basic" id="bestactors">
+      <div class="container">
+        <div class="title">
+          <h2>Les acteurs les plus populaires</h2>
+        </div>
+        <div class="row">
+          <div class="col-sm-3 text-center" *ngFor="let actor of actors2">
+            <img (click)="clickActor(actor._id)" [src]="actor.image" alt="Thumbnail Image" class="img-circle img-raised"style="margin-bottom: 10px;width: 200px; cursor: pointer;
+height: 200px;">
+            <h4 (click)="clickActor(actor._id)" style="cursor: pointer;" >{{actor.name}}</h4>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="section section-basic" id="allmovies">
+      <div class="container">
+        <div class="title">
+          <h2>Tous les films</h2>
+        </div>
+        <div class="row">
+          <table class="table">
+            <thead>
+            <tr>
+              <th class="text-center">#</th>
+              <th>Nom du film</th>
+              <th>Image</th>
+              <th>Année</th>
+              <th class="text-right">Acteurs</th>
+              <th class="text-right">Supprimer</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let film of films">
+              <td class="text-center">{{film.id}}</td>
+              <td style="color: #0a3d59;cursor: pointer;" (click)="clickFilm(film._id)">{{film.title}}</td>
+              <td>
+                <img [src]="film.image" style="width: 75px;cursor: pointer;" (click)="clickFilm(film._id)">
+              </td>
+              <td>{{film.year}}</td>
+              <td class="text-right">
+                <ul>
+                  <li *ngFor="let actor of film.actors" style="list-style-type: none">
+                    <span style="color: #0a3d59;cursor: pointer;" (click)="clickActor(actor)">{{getActorsById(actor)}}</span>
+                  </li>
+                </ul>
+              </td>
+              <td class="td-actions text-right">
+                <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs" (click)="DeleteFilm(film.id)">
+                  <i class="fa fa-times"></i>
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row pull-right">
+          <button class="btn btn-primary btn-round" (click)="AddMovie()">
+            <i class="material-icons">note add</i> Ajouter Film
+          </button>
+          <button class="btn btn-primary btn-round" (click)="AddActor()">
+            <i class="material-icons">note add</i> Ajouter Acteur
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="space-50"></div>
+
+
+  </div>
+  <popup #popupfilm style="text-align: center;">
+
+        <img [src]="film_clicked.image" style="width: 250px;height: 350px;">
+        <ul>
+          <li style=" list-style-type: none;">
+            Title : {{film_clicked.title}}
+          </li>
+          <li style=" list-style-type: none;">
+            Year : {{film_clicked.year}}
+          </li>
+          <li style=" list-style-type: none;">
+            Actors : <span *ngFor="let actor of film_clicked.actors">
+            {{getActorsById(actor)}}
+          </span>
+          </li>
+        </ul>
+  </popup>
+
+  <popup #popupactor style="text-align: center;">
+        <img [src]="actor_clicked.image" style="width: 250px;height: 350px;">
+
+        <ul>
+          <li style="list-style-type: none;">
+            Name : {{actor_clicked.name}}
+          </li>
+          <li style="list-style-type: none;">
+            Birth Year : {{actor_clicked.birth_year}}
+          </li>
+          <li style="list-style-type: none;">
+            Films : <span *ngFor="let film of actor_clicked.movies">
+            {{getFilmById(film)}}
+          </span>
+          </li>
+        </ul>
+  </popup>
+
+  <popup #addmovie (confirmClick)="SubmitMovie()">
+
+    <form class="form-horizontal">
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Title</label>
+        <div class="col-sm-7">
+          <input type="text" class="form-control" name="titlemovie" [(ngModel)]="body_add.title" id="titlemovie" placeholder="Title of the movie">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Year</label>
+        <div class="col-sm-7">
+          <input type="text" class="form-control" name="yearmovie" [(ngModel)]="body_add.year" id="yearmovie" placeholder="Year of the movie">
+        </div>
+      </div>
+
+
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Image</label>
+        <div class="col-sm-7">
+          <input type="text" class="form-control" name="imagemovie" [(ngModel)]="body_add.image" id="imagemovie" placeholder="Image Url Of the movie">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Acteurs</label>
+        <div class="col-sm-7">
+
+          <select multiple class="form-control" [(ngModel)]="body_add.actors" name="actors">
+            <option *ngFor="let actor of actors" [ngValue]="actor._id">
+              {{actor.name}}
+            </option>
+          </select>
+
+
+        </div>
+      </div>
+
+    </form>
+
+  </popup>
+  <popup #addactor (confirmClick)="SubmitActor()">
+
+    <form class="form-horizontal">
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Name</label>
+        <div class="col-sm-7">
+          <input type="text" class="form-control" name="nameActor" [(ngModel)]="body_actor.name" id="nameActor" placeholder="Name of the actor">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Birth Year</label>
+        <div class="col-sm-7">
+          <input type="text" class="form-control" name="yearactor" [(ngModel)]="body_actor.birth_year" id="yearactor" placeholder="Birth Year of the actor">
+        </div>
+      </div>
+
+
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Image</label>
+        <div class="col-sm-7">
+          <input type="text" class="form-control" name="imageactor" [(ngModel)]="body_actor.image" id="imageactor" placeholder="Image Url Of the actor">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Films :</label>
+        <div class="col-sm-7">
+
+          <select multiple class="form-control" [(ngModel)]="body_actor.movies" name="actors">
+            <option *ngFor="let film of films" [ngValue]="film._id">
+              {{film.title}}
+            </option>
+          </select>
+
+
+        </div>
+      </div>
+
+    </form>
+
+  </popup>
+
+</div>
